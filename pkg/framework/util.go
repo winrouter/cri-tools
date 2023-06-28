@@ -336,12 +336,10 @@ func PullPublicImage(c internalapi.ImageManagerService, imageName string, podCon
 	ref, err := reference.ParseNamed(imageName)
 	if err == nil {
 		// Modify the image if it's a fully qualified image name
-		if TestContext.RegistryPrefix != DefaultRegistryPrefix {
-			r := fmt.Sprintf("%s/%s", TestContext.RegistryPrefix, reference.Path(ref))
-			ref, err = reference.ParseNamed(r)
-			ExpectNoError(err, "failed to parse new image name: %v", err)
+		registryPrefix := reference.Domain(ref)
+		if TestContext.RegistryPrefix != "" && TestContext.RegistryPrefix != registryPrefix {
+			imageName = strings.ReplaceAll(imageName, registryPrefix, TestContext.RegistryPrefix)
 		}
-		imageName = ref.String()
 
 		if !strings.Contains(imageName, ":") {
 			imageName = imageName + ":latest"
@@ -378,4 +376,37 @@ func LoadYamlFile(filepath string, obj interface{}) error {
 
 	Logf("Successfully loaded YAML file %q into %+v", filepath, obj)
 	return nil
+}
+
+func GetTestImageWithRegistryPrefix(imageName string) string {
+	if TestContext.RegistryPrefix == "" {
+		return imageName
+	}
+
+	ref, err := reference.ParseNamed(imageName)
+	if err == nil {
+		// Modify the image if it's a fully qualified image name
+		registryPrefix := reference.Domain(ref)
+		if TestContext.RegistryPrefix != registryPrefix {
+			imageName = strings.ReplaceAll(imageName, registryPrefix, TestContext.RegistryPrefix)
+		}
+
+		if !strings.Contains(imageName, ":") {
+			imageName = imageName + ":latest"
+		}
+	} else if err == reference.ErrNameNotCanonical {
+		// Non canonical images can simply be prefixed
+		imageName = fmt.Sprintf("%s/%s", TestContext.RegistryPrefix, imageName)
+	}
+	return imageName
+}
+
+func GetTestImageListWithRegistryPrefix(images []string) []string {
+	result := make([]string, 0)
+
+	for _, image := range images {
+		result = append(result, GetTestImageWithRegistryPrefix(image))
+	}
+
+	return result
 }

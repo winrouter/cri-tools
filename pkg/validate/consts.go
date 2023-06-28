@@ -162,19 +162,19 @@ var (
 
 var _ = framework.AddBeforeSuiteCallback(func() {
 	if runtime.GOOS != "windows" || framework.TestContext.IsLcow {
-		testImageWithoutTag = testLinuxImageWithoutTag
-		testImageWithTag = testLinuxImageWithTag
-		testImageWithDigest = testLinuxImageWithDigest
-		testImageWithAllReferences = testLinuxImageWithAllReferences
-		testDifferentTagDifferentImageList = testLinuxDifferentTagDifferentImageList
-		testDifferentTagSameImageList = testLinuxDifferentTagSameImageList
+		testImageWithoutTag = framework.GetTestImageWithRegistryPrefix(testLinuxImageWithoutTag)
+		testImageWithTag = framework.GetTestImageWithRegistryPrefix(testLinuxImageWithTag)
+		testImageWithDigest = framework.GetTestImageWithRegistryPrefix(testLinuxImageWithDigest)
+		testImageWithAllReferences = framework.GetTestImageWithRegistryPrefix(testLinuxImageWithAllReferences)
+		testDifferentTagDifferentImageList = framework.GetTestImageListWithRegistryPrefix(testLinuxDifferentTagDifferentImageList)
+		testDifferentTagSameImageList = framework.GetTestImageListWithRegistryPrefix(testLinuxDifferentTagSameImageList)
 	} else {
-		testImageWithoutTag = testWindowsImageWithoutTag
-		testImageWithTag = testWindowsImageWithTag
-		testImageWithDigest = testWindowsImageWithDigest
-		testImageWithAllReferences = testWindowsImageWithAllReferences
-		testDifferentTagDifferentImageList = testWindowsDifferentTagDifferentImageList
-		testDifferentTagSameImageList = testWindowsDifferentTagSameImageList
+		testImageWithoutTag = framework.GetTestImageWithRegistryPrefix(testWindowsImageWithoutTag)
+		testImageWithTag = framework.GetTestImageWithRegistryPrefix(testWindowsImageWithTag)
+		testImageWithDigest = framework.GetTestImageWithRegistryPrefix(testWindowsImageWithDigest)
+		testImageWithAllReferences = framework.GetTestImageWithRegistryPrefix(testWindowsImageWithAllReferences)
+		testDifferentTagDifferentImageList = framework.GetTestImageListWithRegistryPrefix(testWindowsDifferentTagDifferentImageList)
+		testDifferentTagSameImageList = framework.GetTestImageListWithRegistryPrefix(testWindowsDifferentTagSameImageList)
 	}
 	testImagePodSandbox = &runtimeapi.PodSandboxConfig{
 		Labels: framework.DefaultPodLabels,
@@ -234,14 +234,14 @@ var (
 
 var _ = framework.AddBeforeSuiteCallback(func() {
 	if runtime.GOOS != "windows" || framework.TestContext.IsLcow {
-		webServerImage = webServerLinuxImage
-		hostNetWebServerImage = hostNetWebServerLinuxImage
+		webServerImage = framework.GetTestImageWithRegistryPrefix(webServerLinuxImage)
+		hostNetWebServerImage = framework.GetTestImageWithRegistryPrefix(hostNetWebServerLinuxImage)
 		getDNSConfigCmd = getDNSConfigLinuxCmd
 		getDNSConfigContent = getDNSConfigLinuxContent
 		getHostnameCmd = getHostnameLinuxCmd
 	} else {
-		webServerImage = webServerWindowsImage
-		hostNetWebServerImage = hostNetWebServerWindowsImage
+		webServerImage = framework.GetTestImageWithRegistryPrefix(webServerWindowsImage)
+		hostNetWebServerImage = framework.GetTestImageWithRegistryPrefix(hostNetWebServerWindowsImage)
 		getDNSConfigCmd = getDNSConfigWindowsCmd
 		getDNSConfigContent = getDNSConfigWindowsContent
 		getHostnameCmd = getHostnameWindowsCmd

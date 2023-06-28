@@ -133,7 +133,7 @@ func createMultiContainerTestHttpdContainer(rc internalapi.RuntimeService, ic in
 	containerName := prefix + framework.NewUUID()
 	containerConfig := &runtimeapi.ContainerConfig{
 		Metadata: framework.BuildContainerMetadata(containerName, framework.DefaultAttempt),
-		Image:    &runtimeapi.ImageSpec{Image: httpdImage},
+		Image:    &runtimeapi.ImageSpec{Image: framework.GetTestImageWithRegistryPrefix(httpdImage)},
 		Linux:    &runtimeapi.LinuxContainerConfig{},
 		LogPath:  fmt.Sprintf("%s.log", containerName),
 	}

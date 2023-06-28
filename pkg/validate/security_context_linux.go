@@ -84,7 +84,8 @@ var _ = framework.KubeDescribe("Security Context", func() {
 			By("create nginx container")
 			prefix := "nginx-container-"
 			containerName := prefix + framework.NewUUID()
-			containerID, nginxContainerName, _ := createNamespaceContainer(rc, ic, podID, podConfig, containerName, nginxContainerImage, namespaceOption, nil, "")
+			containerID, nginxContainerName, _ := createNamespaceContainer(rc, ic, podID, podConfig, containerName,
+				framework.GetTestImageWithRegistryPrefix(nginxContainerImage), namespaceOption, nil, "")
 
 			By("start container")
 			startContainer(rc, containerID)
@@ -201,7 +202,8 @@ var _ = framework.KubeDescribe("Security Context", func() {
 			By("create nginx container")
 			prefix := "nginx-container-"
 			containerName := prefix + framework.NewUUID()
-			containerID, _, _ := createNamespaceContainer(rc, ic, podID, podConfig, containerName, nginxContainerImage, namespaceOption, nil, "")
+			containerID, _, _ := createNamespaceContainer(rc, ic, podID, podConfig, containerName,
+				framework.GetTestImageWithRegistryPrefix(nginxContainerImage), namespaceOption, nil, "")
 
 			By("start container")
 			startContainer(rc, containerID)
@@ -227,7 +229,8 @@ var _ = framework.KubeDescribe("Security Context", func() {
 			By("create nginx container")
 			prefix := "nginx-container-"
 			containerName := prefix + framework.NewUUID()
-			containerID, _, _ := createNamespaceContainer(rc, ic, podID, podConfig, containerName, nginxContainerImage, namespaceOption, nil, "")
+			containerID, _, _ := createNamespaceContainer(rc, ic, podID, podConfig, containerName,
+				framework.GetTestImageWithRegistryPrefix(nginxContainerImage), namespaceOption, nil, "")
 
 			By("start container")
 			startContainer(rc, containerID)
@@ -813,7 +816,7 @@ var _ = framework.KubeDescribe("Security Context", func() {
 			By(fmt.Sprintf("create container %s", name))
 			containerConfig := &runtimeapi.ContainerConfig{
 				Metadata: framework.BuildContainerMetadata(name, framework.DefaultAttempt),
-				Image:    &runtimeapi.ImageSpec{Image: noNewPrivsImage},
+				Image:    &runtimeapi.ImageSpec{Image: framework.GetTestImageWithRegistryPrefix(noNewPrivsImage)},
 				Linux: &runtimeapi.LinuxContainerConfig{
 					SecurityContext: &runtimeapi.LinuxContainerSecurityContext{
 						NoNewPrivs: noNewPrivs,
